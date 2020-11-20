@@ -94,6 +94,12 @@ import kamon.prometheus.PrometheusReporter;
  */
 @NotThreadSafe
 public abstract class DittoService<C extends ServiceSpecificConfig> {
+    /**
+     * Initialize Kamon with Kanela (bytecode instrumentation)
+     */
+    static {
+        Kamon.init();
+    }
 
     /**
      * Name of the cluster of this service.
@@ -246,27 +252,7 @@ public abstract class DittoService<C extends ServiceSpecificConfig> {
     private void startKamon() {
         final Config kamonConfig = ConfigFactory.load("kamon");
         Kamon.reconfigure(kamonConfig);
-
-        final MetricsConfig metricsConfig = serviceSpecificConfig.getMetricsConfig();
-
-        if (metricsConfig.isSystemMetricsEnabled()) {
-            // start system metrics collection
-            Kamon.init();
-        }
-        if (metricsConfig.isPrometheusEnabled()) {
-            // start prometheus reporter
-            startPrometheusReporter();
-        }
-    }
-
-    private void startPrometheusReporter() {
-        try {
-            prometheusReporter = PrometheusReporter.create();
-            Kamon.registerModule("prometheus reporter", prometheusReporter);
-            logger.info("Successfully added Prometheus reporter to Kamon.");
-        } catch (final Exception ex) {
-            logger.error("Error while adding Prometheus reporter to Kamon.", ex);
-        }
+        logger.info("Reconfigured kamon");
     }
 
     /**

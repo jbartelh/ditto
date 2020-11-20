@@ -12,6 +12,7 @@
  */
 package org.eclipse.ditto.services.gateway.starter;
 
+import kamon.Kamon;
 import org.eclipse.ditto.services.base.DittoService;
 import org.eclipse.ditto.services.gateway.util.config.DittoGatewayConfig;
 import org.eclipse.ditto.services.gateway.util.config.GatewayConfig;
